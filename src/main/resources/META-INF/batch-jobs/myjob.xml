@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job id="myjob" version="1.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee">
+    <properties>
+        <property name="url" value="jdbc:h2:./target/mydb"/>
+    </properties>
+
+    <step id="generateSchema" next="test">
+        <batchlet ref="schemaGenerateBatchlet"/>
+    </step>
+
+    <step id="test">
+        <chunk>
+            <reader ref="csvItemReader">
+                <properties>
+                    <property name="resource" value="usdjpy.csv"/>
+                    <property name="headerless" value="true"/>
+                    <property name="delimiterChar" value=";"/>
+
+                    <property name="beanType" value="java.util.List"/>
+
+                    <!--<property name="nameMapping" value="ts, bid_open, bid_high, bid_low, bid_close, volume"/>-->
+                    <!--<property name="beanType" value="java.util.Map"/>-->
+                </properties>
+            </reader>
+            <writer ref="jdbcItemWriter">
+                <properties>
+                    <property name="sql" value="INSERT INTO forex (symbol, ts, bid_open, bid_high, bid_low, bid_close, volume) values ('USDJPY', parsedatetime(?, 'yyyyMMdd HHmmss'), ?, ?, ?, ?, ?)"/>
+                    <property name="url" value="#{jobProperties['url']}"/>
+
+                    <property name="beanType" value="java.util.List"/>
+
+                    <!--<property name="beanType" value="java.util.Map"/>-->
+
+                    <!--<property name="parameterNames" value="ts, bid_open, bid_high, bid_low, bid_close, volume"/>-->
+                </properties>
+            </writer>
+        </chunk>
+    </step>
+</job>

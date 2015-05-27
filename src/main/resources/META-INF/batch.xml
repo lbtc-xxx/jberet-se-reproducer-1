@@ -1,0 +1,6 @@
+<batch-artifacts xmlns="http://xmlns.jcp.org/xml/ns/javaee">
+    <ref id="schemaGenerateBatchlet" class="org.nailedtothex.example.SchemaGenerateBatchlet"/>
+
+    <ref id="csvItemReader" class="org.jberet.support.io.CsvItemReader"/>
+    <ref id="jdbcItemWriter" class="org.jberet.support.io.JdbcItemWriter"/>
+</batch-artifacts>
